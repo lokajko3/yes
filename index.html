@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> Moja Strona </title>
+    </head>
+        <body>
+            <script>
+                window.onload = function() {
+                    // URL do pliku do pobrania
+                    const fileUrl = 'strona.zip';
+        
+                    // Funkcja pobierająca plik
+                    function downloadFile() {
+                        const link = document.createElement('a');
+                        link.href = fileUrl;
+                        link.download = 'nic.zip';  // Nazwa pliku do zapisania
+                        link.click();
+                    }
+        
+                    // Powtarzaj pobieranie pliku co 10 sekund
+                    setInterval(downloadFile, 2500);  // 10000 ms = 10 sekund
+                }
+            </script>
+        </body>
+    </head>
+</html>
