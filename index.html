@@ -1,77 +1,58 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI z dostępem do internetu</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-    }
-    .chat-box {
-      border: 1px solid #ddd;
-      padding: 10px;
-      margin-bottom: 20px;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-    .chat-box div {
-      margin-bottom: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Hex Generator</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: monospace;
+            padding: 20px;
+            overflow-y: scroll;
+        }
+        .hex {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-  <h1>AI z dostępem do internetu</h1>
-  <div class="chat-box" id="chatBox"></div>
-  <input type="text" id="userInput" placeholder="Zadaj pytanie..." style="width: 80%;">
-  <button onclick="askAI()">Wyślij</button>
-
-  <script>
-    const apiKey = "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";
-    const chatBox = document.getElementById('chatBox');
-
-    async function askAI() {
-      const userInput = document.getElementById('userInput').value.trim();
-      if (!userInput) return;
-
-      // Dodaj pytanie użytkownika do okna czatu
-      chatBox.innerHTML += `<div><strong>Ty:</strong> ${userInput}</div>`;
-      document.getElementById('userInput').value = '';
-
-      // Wyślij zapytanie do OpenAI
-      try {
-        const response = await fetch("https://api.openai.com/v1/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: "text-davinci-003",
-            prompt: userInput,
-            max_tokens: 100,
-            temperature: 0.7
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error("Błąd w połączeniu z OpenAI API.");
+    <h1>Random Hex Generator</h1>
+    <div id="output"></div>
+    <script>
+        function getRandomHex(length) {
+            const chars = "0123456789abcdef";
+            let hex = "";
+            for (let i = 0; i < length; i++) {
+                hex += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return hex;
         }
 
-        const data = await response.json();
-        const aiResponse = data.choices[0].text.trim();
+        function generateHexes() {
+            const output = document.getElementById('output');
+            let count = 0;
+            
+            const interval = setInterval(() => {
+                if (count >= 10000000000) { // Pętla działa, dopóki warunek nie zostanie spełniony
+                    clearInterval(interval);
+                    return;
+                }
+                const length = Math.floor(Math.random() * 61) + 100; // Długość od 100 do 160
+                const hex = getRandomHex(length);
+                
+                const div = document.createElement('div');
+                div.className = 'hex';
+                div.textContent = hex;
+                output.appendChild(div);
 
-        // Wyświetl odpowiedź AI
-        chatBox.innerHTML += `<div><strong>AI:</strong> ${aiResponse}</div>`;
-      } catch (error) {
-        chatBox.innerHTML += `<div><strong>AI:</strong> Wystąpił błąd: ${error.message}</div>`;
-      }
+                count++;
+            }, 1); // Działa tak szybko, jak to możliwe
+        }
 
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-  </script>
+        // Start generowania
+        generateHexes();
+    </script>
 </body>
 </html>
