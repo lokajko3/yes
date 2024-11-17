@@ -11,6 +11,7 @@
             font-family: monospace;
             padding: 20px;
             overflow-y: scroll;
+            margin: 0;
         }
         .hex {
             margin: 5px 0;
@@ -35,10 +36,11 @@
             let count = 0;
             
             const interval = setInterval(() => {
-                if (count >= 10000000000) { // Pętla działa, dopóki warunek nie zostanie spełniony
+                if (count >= 100000000) { // Zatrzymanie, gdy osiągnięta zostanie maksymalna liczba iteracji
                     clearInterval(interval);
                     return;
                 }
+
                 const length = Math.floor(Math.random() * 61) + 100; // Długość od 100 do 160
                 const hex = getRandomHex(length);
                 
@@ -46,6 +48,9 @@
                 div.className = 'hex';
                 div.textContent = hex;
                 output.appendChild(div);
+
+                // Automatyczne przewijanie
+                div.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
                 count++;
             }, 1); // Działa tak szybko, jak to możliwe
