@@ -10,11 +10,14 @@
             color: green;
             font-family: monospace;
             padding: 20px;
-            overflow-y: scroll;
             margin: 0;
         }
         .hex {
             margin: 5px 0;
+        }
+        #output {
+            height: 100vh;
+            overflow-y: auto;
         }
     </style>
 </head>
@@ -34,29 +37,41 @@
         function generateHexes() {
             const output = document.getElementById('output');
             let count = 0;
-            
+
             const interval = setInterval(() => {
-                if (count >= 10000000000) { // Zatrzymanie, gdy osiągnięta zostanie maksymalna liczba iteracji
+                if (count >= 10000000000) {
                     clearInterval(interval);
                     return;
                 }
 
                 const length = Math.floor(Math.random() * 61) + 100; // Długość od 100 do 160
                 const hex = getRandomHex(length);
-                
+
                 const div = document.createElement('div');
                 div.className = 'hex';
                 div.textContent = hex;
                 output.appendChild(div);
 
                 // Automatyczne przewijanie
-                div.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                output.scrollTop = output.scrollHeight;
+
+                // Obserwator do usuwania elementów po zniknięciu z ekranu
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) {
+                            // Usuwanie elementu, jeśli zniknął z ekranu
+                            entry.target.remove();
+                        }
+                    });
+                }, { threshold: 0 }); // Obserwowanie, kiedy element wychodzi poza ekran
+
+                observer.observe(div); // Rozpoczynamy obserwowanie nowo dodanego elementu
 
                 count++;
-            }, 1); // Działa tak szybko, jak to możliwe
+            }, 1); // Dodawanie elementów w bardzo krótkich odstępach
         }
 
-        // Start generowania
+        // Uruchomienie generowania
         generateHexes();
     </script>
 </body>
